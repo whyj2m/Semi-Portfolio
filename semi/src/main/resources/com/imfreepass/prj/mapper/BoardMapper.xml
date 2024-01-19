@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imfreepass.prj.mapper.BoardMapper"> 
+	
+	<!-- 게시글 목록 -->
+	<select id="getList" resultType="com.imfreepass.prj.domain.BoardVO">
+	SELECT * FROM board WHERE category = #{category} ORDER BY bno DESC LIMIT #{amount} offset ${offset}
+	</select>
+	
+	<!-- 게시글 1개 조회 -->
+	<select id="get" resultType="com.imfreepass.prj.domain.BoardVO">
+	select * from board where bno = #{bno}
+	</select>
+	
+	<!-- 게시글 등록 -->
+	<insert id="insertSelectKey">
+	insert into board(bno, title, content, id, category,bookno, alram, asktype) values (#{bno}, #{title}, #{content},
+			 #{id}, #{category}, #{bookno}, #{alram}, #{asktype})
+		<selectKey keyProperty="bno" order="AFTER" resultType="Long">
+		select max(bno) from board
+		</selectKey>
+	</insert>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="delete">
+	delete from board where bno = #{bno}
+	</delete>
+	
+	<!-- 게시글 수정  -->
+	<update id="update">
+	update board set
+		title = #{title},
+		content = #{content},
+		id = #{id},
+		updatedate = now()
+	where bno = #{bno}
+	</update>
+	
+	<!-- 게시글 갯수 조회 -->
+	<select id="getTotal" resultType="int">
+	select count(*) from board where category = #{category}
+	</select>
+	
+
+	
+</mapper>

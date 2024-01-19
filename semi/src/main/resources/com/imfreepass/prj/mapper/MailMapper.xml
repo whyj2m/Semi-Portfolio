@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imfreepass.prj.mapper.MailMapper">
+	<select id="getCode" resultType="String">
+		select * from mail where email = #{email}
+	</select>
+	
+	<select id="get" resultType="com.imfreepass.prj.domain.EmailVO">
+		select * from mail
+	</select>
+	
+	<insert id="insertCode">
+	 	insert into email values(#{email}, #{code}, #{expiresTime})
+	 	on duplicate key update
+	 	code = values(code),
+	 	created_time = now(),
+	 	expires_iime = values(expiresTime)
+	</insert>
+</mapper>

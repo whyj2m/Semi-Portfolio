@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imfreepass.prj.mapper.ReplyMapper"> 
+	
+	<!-- 댓글 목록 -->
+	<select id="getList" resultType="com.imfreepass.prj.domain.ReplyVO">
+	select * from reply  where hno = #{hno} order by 1 desc
+	</select>
+	
+	<!-- 댓글 1개 조회 -->
+	<select id="get" resultType="com.imfreepass.prj.domain.ReplyVO">
+	select * from reply where replyNo = #{replyNo}
+	</select>
+	
+	<!-- 댓글 등록 -->
+	<insert id="insertReply" >
+	insert into reply( id, bookNo, replyContent, replyPoint, replyTitle, hno) values (#{id}, #{bookNo}, #{replyContent}, #{replyPoint},  #{replyTitle}, #{hno})
+		<selectKey keyProperty="replyno" order="AFTER" resultType="Long">
+		    select max(replyNo) from reply
+		</selectKey>
+	</insert>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="delete">
+	delete from reply where replyNo = #{replyNo}
+	</delete>
+	
+	<!-- 댓글 수정  -->
+	<update id="update">
+	update reply set 
+	  replyTitle = #{replyTitle},
+	  replyContent = #{replyContent},
+	  replyDate = now()
+	  where  replyNo = #{replyNo};
+	</update>
+	
+	<!-- 게시글 갯수 조회 -->
+	<select id="getTotal" resultType="int">
+		select count(*) from reply where hno = #{hno}
+	</select>
+	
+	<!-- 게시글 댓글 평균점수 조회 -->
+	<select id="getAvg" resultType="int">
+		SELECT COALESCE(round(AVG(replypoint)), 0) FROM reply WHERE hno = #{hno};
+	</select>
+	
+	<!-- 사장님 호텔 댓글 보기 -->
+	<select id="getReply" resultType="com.imfreepass.prj.domain.ReplyVO">
+    select * from reply where hno IN (SELECT hno FROM hotel WHERE id = #{id});
+</select>
+
+
+</mapper>

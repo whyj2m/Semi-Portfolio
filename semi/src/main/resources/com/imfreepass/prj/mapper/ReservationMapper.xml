@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imfreepass.prj.mapper.ReservationMapper">
+
+	<!-- <resultMap type="com.imfreepass.prj.domain.ReservationVO" id="reservationMap"> 
+		<id property="bookNo" column="bookno" /> <result property="bookState" column="bookstate"/> 
+		<result property="hotelTel" column="hoteltel"/> <result property="roomName" 
+		column="roomname" /> <result property="roomPrice" column="roomprice" /> <result 
+		property="payHow" column="payhow"/> <collection property="rooms" resultMap="roomMap" 
+		/> </resultMap> <resultMap type="com.imfreepass.prj.domain.RoomVO" id="roomMap"> 
+		<id property="roomNo" column="roomno" /> <result column="hno" property="hno" 
+		/> <result column="roomname" property="roomName" /> <result column="roomprice" 
+		property="roomPrice" /> </resultMap> -->
+<!-- 	<resultMap id="reservationMap" type="com.imfreepass.prj.domain.ReservationVO">
+		<id property="bookNo" column="bookno" />
+		<result property="roomNo" column="roomno" />
+		<result property="hno" column="hno" />
+		<result property="id" column="id" />
+		<result property="hotelTel" column="hoteltel" />
+		<result property="roomName" column="roomname" />
+		<result property="bookState" column="bookstate" />
+		<result property="checkIn" column="checkin" />
+		<result property="checkOut" column="checkout" />
+		<result property="roomPrice" column="roomprice" />
+		<result property="payHow" column="payhow" />
+		<result property="payTime" column="paytime" />
+	<collection property="rooms" ofType="com.imfreepass.prj.domain.RoomVO">
+		<id property="roomNo" column="roomno" />
+		<result property="hno" column="hno" />
+		<result property="roomName" column="roomname" />
+		<result property="roomPrice" column="roomprice" />
+		<result property="comment" column="roomcomment" /> 
+		</collection>
+	</resultMap> -->
+
+	
+	<!-- <select id="getList"
+		resultType="com.imfreepass.prj.domain.ReservationVO">
+		select * from reservation
+	</select> -->
+
+
+	<!-- <select id="read" resultMap="reservationMap"> SELECT r.hno, r.roomno, 
+		r.roomname, r.roomprice FROM reservation rs LEFT JOIN room r using(hno) WHERE 
+		r.hno = #{hno}; </select> -->
+
+	<select id="get" resultType="com.imfreepass.prj.domain.ReservationVO">
+		select * from reservation where bookno = #{bookno};
+	</select>
+	
+	<select id="getList" resultType="com.imfreepass.prj.domain.ReservationVO">
+		select * from reservation
+	</select>
+	
+	
+	<select id="getListall" resultType="com.imfreepass.prj.domain.ReservationVO">
+		select * from reservation
+	</select>
+
+	
+	<insert id="reservation" useGeneratedKeys="true" keyProperty="bookNo" parameterType="com.imfreepass.prj.domain.ReservationVO" >
+		insert into reservation(roomno ,hno, id, hoteltel, roomname, bookstate, checkin, 
+		checkout, roomprice, payhow)
+		values(#{roomNo}, #{hno}, #{id}, #{hotelTel}, #{roomName}, #{bookState}, #{checkin}, 
+		#{checkout}, #{roomPrice}, #{payHow}) 
+	</insert>
+	
+<!-- 	<select id="listGet" resultType="com.imfreepass.prj.domain.ReservationVO">
+		select * from reservation where id = #{id}
+	</select> -->
+	
+	<select id="list" resultType="com.imfreepass.prj.domain.ReservationVO">
+		select * from reservation where id = #{id}
+	</select>
+	
+<!-- 	예약
+	<insert id="reservation" useGeneratedKeys="true" keyProperty="bookNo" keyColumn="bookno">
+		INSERT INTO reservation (bookno, roomno, hno, id, hoteltel, roomname, bookstate, checkin, checkout, roomprice, payhow, paytime)
+		VALUES (#{bookNo}, #{roomNo}, #{hno}, #{id}, #{hotelTel}, #{roomName}, #{bookState}, #{checkIn}, #{checkOut}, #{roomPrice}, #{payHow}, #{payTime})
+	</insert> -->
+
+	<!--insert하기전에 할 내용들 다른 테이블 조회 -->
+	<!-- <select id="selectList" resultMap=""> SELECT r.roomno, r.roomname, 
+		r.roomprice, r.hno, h.hoteltel, h.hotelname FROM room r LEFT JOIN hotel h 
+		ON r.hno = h.hno WHERE r.hno = #{hno} AND r.roomno = #{roomno} </select> -->
+		
+		<delete id="delete">
+			delete from reservation where bookno = #{bookno};
+		</delete>
+
+</mapper>

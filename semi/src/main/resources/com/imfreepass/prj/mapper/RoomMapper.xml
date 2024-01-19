@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imfreepass.prj.mapper.RoomMapper"> 
+	
+	<!-- 룸 목록 -->
+	<select id="getList" resultType="com.imfreepass.prj.domain.RoomVO">
+		SELECT * FROM room WHERE hno = #{hno} order by roomNo;
+	</select>
+
+	
+	<!-- 룸 단일 조회 -->
+	<select id="get" resultType="com.imfreepass.prj.domain.RoomVO">
+		select * from room where roomNo = #{roomNo};
+	</select>
+	
+	<!-- 객실 이름 조회 -->
+	<select id="getRoom" resultType="com.imfreepass.prj.domain.RoomVO">
+		select roomName from room where roomNo = #{roomNo}
+	</select>
+	
+	<!-- 룸 가격 조회 -->
+	<select id="getPrice" resultType="com.imfreepass.prj.domain.RoomVO">
+			SELECT roomprice FROM room WHERE hno = #{hno} order by roomNo limit 1;
+	</select>
+	
+	<!-- 룸 등록 -->
+	<insert id="insertRoom">
+	insert into room(roomNo, hno, roomName, roomPrice, comment) values (#{roomNo}, #{hno}, #{roomName}, #{roomPrice}, #{comment})
+		<selectKey keyProperty="roomNo" order="AFTER" resultType="Long">
+		select max(roomNo) from room
+		</selectKey>
+	</insert>
+	
+	<!-- 룸 삭제 -->
+	<delete id="delete">
+	delete from room where roomNo = #{roomNo}
+	</delete>
+	
+	<!-- 룸 수정  -->
+	<update id="update">
+	update room set
+		roomName = #{roomName},
+		roomPrice = #{roomPrice},
+		comment = #{comment}
+	where roomNo = #{roomNo}
+	</update>
+	
+
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imfreepass.prj.mapper.RoomImageMapper"> 
+	
+	<!-- 첨부파일 등록 -->
+	<select id="insert">
+		insert into room_image (uuid, roomNo, origin, path) values (#{uuid}, #{roomNo}, #{origin}, #{path})
+	</select>
+	
+	<!-- 첨부 파일 1개 삭제 -->	
+	<delete id="delete">
+		delete from room_image where uuid = #{uuid}
+	</delete>
+	
+	<!-- hno로 첨부파일 조회 -->
+	<select id="findByHno" resultType="com.imfreepass.prj.domain.RoomImageVO">
+		select * from attach where hno = #{hno}
+	</select>
+	
+	<!-- 첨부파일의 수정 작업 -->
+	<delete id="deleteOption">
+		delete from room_image where roomNo = #{roomNo}
+		<foreach collection="uuids" item="uuid" open="and uuid not in (" separator="," close=")">
+		#{uuid}
+		</foreach>
+	</delete>
+	
+	<!-- roomNo로 조회  -->
+	<select id="selectGet" resultType="com.imfreepass.prj.domain.RoomImageVO">
+		select * from room_image where roomNo = #{roomNo}
+	</select>
+	
+	<delete id="deleteRoomNo">
+		delete from room_image where roomNo = #{roomNo}
+	</delete>
+	
+</mapper>

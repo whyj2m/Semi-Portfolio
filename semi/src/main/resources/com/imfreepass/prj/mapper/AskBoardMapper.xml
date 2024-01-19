@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imfreepass.prj.mapper.AskBoardMapper"> 
+	
+	
+	
+	<insert id="insertAsk">
+	insert into ask_board(adminno, bno, content) values (#{adminno}, #{bno}, #{content})
+		<selectKey keyProperty="adminno" order="AFTER" resultType="Long">
+		select max(adminno) from ask_board
+		</selectKey>
+	</insert>
+	
+	<select id="getAsk" resultType="com.imfreepass.prj.domain.AskBoardVO">
+		select * from ask_board where bno = #{bno}
+	</select>
+	
+</mapper>

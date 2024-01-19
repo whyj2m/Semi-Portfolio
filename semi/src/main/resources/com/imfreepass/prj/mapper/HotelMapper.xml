@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imfreepass.prj.mapper.HotelMapper"> 
+	
+	<!-- 호텔 목록 (주민) 호텔목록에 적용!! 쿼리대박-->
+	<select id="getList" resultType="com.imfreepass.prj.domain.HotelVO">
+		select * from (
+		    select 
+		        (select count(*) from reply where hno = h.hno) replyCnt,
+		        (select coalesce(round(AVG(replypoint)), 0) from reply where hno = h.hno) avg,					<!-- coalesce는 avg - null일떄 0으로 변환  -->
+		        (select min(roomprice) from room where hno = h.hno) price,
+		        h. *
+		    from hotel h
+		    where ano = #{ano}
+		) a
+		where price is not null
+	</select>
+	<!-- 사장님이 등록한 내 호텔 1개 보기 -->
+	<select id="get" resultType="com.imfreepass.prj.domain.HotelVO">
+		select * from hotel where hno = #{hno};
+	</select>
+	
+	
+	<!-- 사장님 호텔 등록 -->
+	<insert id="insertSelectKeyHotel">
+	insert into hotel(hno, hotelName, hotelTel, hotelAddr, hotelInfo, hotelGrade, hotelDesc, ano, zipCode, id) 
+	values (#{hno},#{hotelName}, #{hotelTel}, #{hotelAddr}, #{hotelInfo}, #{hotelGrade}, #{hotelDesc}, #{ano}, #{zipCode}, #{id})
+		<selectKey keyProperty="hno" order="AFTER" resultType="Long">
+		select max(hno) from hotel	
+		</selectKey>
+	</insert>
+	
+	
+	<!-- 호텔 삭제(관리자) -->
+	<delete id="delete">
+	delete from hotel where hno = #{hno}
+	</delete>
+	
+	<!-- (마이페이지) 호텔 수정  -->
+	<update id="update">
+	update hotel set
+		hotelName = #{hotelName},
+		hotelAddr = #{hotelAddr},
+		hotelInfo = #{hotelInfo}
+	where hno = #{hno}
+	</update>
+	
+	<!-- 메인 상단 지역별 리스트  -->
+	<select id="list" resultType="map">
+		select anos ano, hno, hotelname, cdesc, price 
+        from (
+            select min(ano) as anos, hno, hotelname, cdesc, null price
+            from hotel
+            join area using(ano)
+            where ano is not null group by ano order by 1
+        ) a
+        union
+        select * 
+        from (
+        select ano, hno, hotelname, cdesc, roomprice
+            from room 
+            join hotel 
+            using(hno) 
+            join area 
+            using(ano) 
+            order by rand() 
+            limit 8
+        ) a
+	</select>
+	
+	<!-- 객실 등록 할 때 호텔 조회하기  -->
+	<select id="getHotel" resultType="com.imfreepass.prj.domain.HotelVO">
+	select * from hotel where id = #{id}
+	</select>
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imfreepass.prj.mapper.AttachMapper"> 
+	
+	<!-- 첨부파일 등록 -->
+	<select id="insert">
+		insert into attach (bno, askuuid, origin, askpath) values (#{bno}, #{askuuid}, #{origin}, #{askpath})
+	</select>
+	
+	<!-- 첨부 파일 1개 삭제 -->	
+	<delete id="delete">
+		delete from attach where askuuid = #{askuuid}
+	</delete>
+	
+	<!-- bno 1개에 있는 첨부파일 전부 삭제 -->
+	<delete id="deleteAll">
+		delete from attach where bno = #{bno}
+	</delete>
+	
+	<!-- bno로 첨부파일 조회 -->
+	<select id="findByBno" resultType="com.imfreepass.prj.domain.AttachVO">
+		select * from attach where bno = #{bno}
+	</select>
+	
+</mapper>
