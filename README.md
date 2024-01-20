@@ -75,8 +75,34 @@
      ![image](https://github.com/whyj2m/Semi-Portfolio/assets/149341808/93e9fc85-5f2c-411c-aecc-881157bebe93)
 
      ### 댓글
-      ![image](https://github.com/whyj2m/Semi-Portfolio/assets/149341808/06d43810-6d5a-4e44-a7aa-6e14492002ac)
+     ![image](https://github.com/whyj2m/Semi-Portfolio/assets/149341808/06d43810-6d5a-4e44-a7aa-6e14492002ac)
 
+-- 호텔목록 및 상세페이지는 특별한 쿼리없이 select 와 from 을 사용하여 테이블 데이터를 불러왔었습니다. 조금 신기했던 부분은 필요한 데이터만 뽑아오려고한쿼리가
+```java
+<select id="getList" resultType="com.imfreepass.prj.domain.HotelVO">
+		select * from (
+		    select 
+		        (select count(*) from reply where hno = h.hno) replyCnt,
+		        (select coalesce(round(AVG(replypoint)), 0) from reply where hno = h.hno) avg,					<!-- coalesce는 avg - null일떄 0으로 변환  -->
+		        (select min(roomprice) from room where hno = h.hno) price,
+		        h. *
+		    from hotel h
+		    where ano = #{ano}
+		) a
+		where price is not null
+	</select>
+```
+- 여기서 호텔 목록에서 호텔 상세페이지 및 댓글 데이터를 불러와서 목록에서 보여줘야 했는데 replyCnt, avg, price 같은 하위 컬럼 데이터들을 저렇게 엮어서 HotelVO에 매핑해서 DB 테이블에 없는 데이터도 저렇게 보여줄 수 있단 게 정말 신기했습니다. 구조를 완벽하지는 않지만
+이렇게 하나 둘 알아간다는 게 정말 좋았습니다.
+
+
+# 세미 프로젝트 총평
+-- 개발 언어 측면에서는 프론트 에서 JSP, CSS, JavaScript를 사용하였고, 백엔드에서는 Jsoup 라이브러리와 Java, JavaScript을 활용했습니다. 
+	서버로는 Apache Tomcat 9.0를 선택하고, 데이터베이스로는 MariaDB를 사용했습니다. Eclipse를 개발 툴로 활용해  MVC 패턴2를 적용하여 프로젝트를 구성했습니다.
+	특히, 데이터 크롤링, 메인페이지의 호텔 목록 및 호텔 객실 페이지, 그리고 댓글 서비스를 주로 맡아 구현했습니다. 
+	데이터베이스 처리와 관련하여, 쿼리 작성 및 서브 쿼리를 통한 데이터 가공에 대한 경험은 정말 신기했습니다. 특히, HotelVO 클래스에 쿼리 결과를 매핑하여 DB 테이블에 없는 데이터도 효과적으로 보여줄 수 있었던 부분은 새로운 발견이었습니다
+	또한 팀원 분들과 의사소통을 Discord로 주기적으로 하며 진행 현황을 공유하였고 정말 프로젝트 같은 의미 있는 경험이었습니다. 혼자보다 같이 협력하여 진행하니 좋았습니다. 그렇지만 애로사항도 있었습니다. 의견 충돌이나 그런 부분에서는 서로 양보하며
+	타협점을 잡아 큰 소란 없이 진행된 게 정말 다행이었습니다. 조화로웠던 팀원분들과 1달 동안 고맙고 감사한 프로젝트였습니다 재밌었습니다!
 ##  *시연영상(유튜브)
 
 - [제주어때 시연영상](https://youtube.com)
