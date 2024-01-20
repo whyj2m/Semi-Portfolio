@@ -40,8 +40,42 @@
 
  1. 쿼리를 쓰면서 어려움
    - 랜덤으로 8개의 지역상관X 호텔을 불러오는 쿼리를 짜려고 기획했었다. 그런데 XML에서 프론트로 처리하려고 했으나 어려움이 있었고 선생님께 질문을 했었는데 SQL쿼리문으로 해결이 가능하다고 하셔서
-      도움을 받아 쿼리를 작성하였습니다. 
-      
+      도움을 받아 쿼리를 작성하였습니다.
+
+     ```java
+      <select id="list" resultType="map">
+		select anos ano, hno, hotelname, cdesc, price 
+        from (
+            select min(ano) as anos, hno, hotelname, cdesc, null price
+            from hotel
+            join area using(ano)
+            where ano is not null group by ano order by 1
+        ) a
+        union
+        select * 
+        from (
+        select ano, hno, hotelname, cdesc, roomprice
+            from room 
+            join hotel 
+            using(hno) 
+            join area 
+            using(ano) 
+            order by rand() 
+            limit 8
+        ) a
+	</select>
+-쿼리를 작성하면서 연산자 union, join, limit를 사용하여 서브 쿼리끼리 연결하고 하나의 쿼리로 만들어서 Mapper로 사용했던 부분이 너무 신기하고 쿼리로 이렇게 데이터 처리를 할 수 있구나! 신기했던 부분이었습니다.
+
+   - ### 호텔목록 페이지
+     ![image](https://github.com/whyj2m/Semi-Portfolio/assets/149341808/e0a02916-80f9-4d63-a76e-2f2a8af3be7f)
+
+     ### 호텔 상세페이지
+     ![image](https://github.com/whyj2m/Semi-Portfolio/assets/149341808/ee78d0cd-ffc3-4200-a843-a0a27aa2479c)
+
+     ![image](https://github.com/whyj2m/Semi-Portfolio/assets/149341808/93e9fc85-5f2c-411c-aecc-881157bebe93)
+
+     ### 댓글
+      ![image](https://github.com/whyj2m/Semi-Portfolio/assets/149341808/06d43810-6d5a-4e44-a7aa-6e14492002ac)
 
 ##  *시연영상(유튜브)
 
