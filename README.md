@@ -95,6 +95,23 @@
 - 여기서 호텔 목록에서 호텔 상세페이지 및 댓글 데이터를 불러와서 목록에서 보여줘야 했는데 replyCnt, avg, price 같은 하위 컬럼 데이터들을 저렇게 엮어서 HotelVO에 매핑해서 DB 테이블에 없는 데이터도 저렇게 보여줄 수 있단 게 정말 신기했습니다. 구조를 완벽하지는 않지만
 이렇게 하나 둘 알아간다는 게 정말 좋았습니다.
 
+-- 추가 : SQL Injection 방어를 위하여 파라미터 타입을 Integer로 받아 일부 보안은 가능하나 완벽하게 방어는 안된다고 합니다.
+
+```java
+<!-- 예시: getList 쿼리에 Prepared Statements 적용 -->
+<select id="getList" resultType="com.imfreepass.prj.domain.HotelVO" parameterType="java.lang.Integer">
+    SELECT * FROM (
+        SELECT 
+            (SELECT COUNT(*) FROM reply WHERE hno = h.hno) replyCnt,
+            (SELECT COALESCE(ROUND(AVG(replypoint)), 0) FROM reply WHERE hno = h.hno) avg,
+            (SELECT MIN(roomprice) FROM room WHERE hno = h.hno) price,
+            h.*
+        FROM hotel h
+        WHERE ano = #{ano}
+    ) a
+    WHERE price IS NOT NULL
+</select>
+```
 
 # 세미 프로젝트 총평
 -- 개발 언어 측면에서는 프론트 에서 JSP, CSS, JavaScript를 사용하였고, 백엔드에서는 Jsoup 라이브러리와 Java, JavaScript을 활용했습니다. 
